@@ -1,0 +1,26 @@
+# 모든 IDE/에디터(예: IntelliJ, VSCode)에서 코드 스타일을 동일하게 유지시켜주는 설정 파일
+# 팀원들 간에 들쭉날쭉한 들여쓰기, 줄바꿈, 문자셋 문제를 방지 가능
+
+# 최상위 .editorconfig 파일임을 명시
+root = true
+
+# 공통 설정
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Java 전용 설정
+[*.java]
+max_line_length = 120
+
+# JSON / YAML / XML 등 추가 포맷 설정
+[*.{yml,yaml,json,xml}]
+indent_size = 2
+
+# Markdown / Gradle 파일
+[*.{md,gradle}]
+indent_size = 2
