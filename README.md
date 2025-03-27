@@ -4,6 +4,7 @@
 
 ## 💻 Tech Stack
 - Spring Boot + Gradle
+- React
 - MySQL + JPA
 - GitHub Actions + Spotless
 
