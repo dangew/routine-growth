@@ -14,7 +14,7 @@ trim_trailing_whitespace = true
 # Java - google-java-format에 맞춘 스타일
 [*.java]
 indent_style = space
-indent_size = 4
+indent_size = 2
 max_line_length = 100
 # 중괄호 위치 등은 spotless가 강제로 설정하므로 따로 지정하지 않음
 
