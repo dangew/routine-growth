@@ -12,14 +12,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter @Builder
+@Getter
+@Setter
+@Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Table(name = "routine_categories")
 public class RoutineCategory {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private String name;
+  private String name;
 }

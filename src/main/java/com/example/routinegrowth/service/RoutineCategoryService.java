@@ -10,20 +10,21 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class RoutineCategoryService {
-    private final RoutineCategoryRepository routineCategoryRepository;
+  private final RoutineCategoryRepository routineCategoryRepository;
 
-    public RoutineCategoryResponse createRoutineCategory(RoutineCategoryRequest routineCategoryRequest) {
-        // routineCategoryRequest to RoutineCategory entity
-        RoutineCategory routineCategory =
-            RoutineCategory.builder().name(routineCategoryRequest.getName()).build();
+  public RoutineCategoryResponse createRoutineCategory(
+      RoutineCategoryRequest routineCategoryRequest) {
+    // routineCategoryRequest to RoutineCategory entity
+    RoutineCategory routineCategory =
+        RoutineCategory.builder().name(routineCategoryRequest.getName()).build();
 
-        // save routine category
-        RoutineCategory routineCategorySaved = routineCategoryRepository.save(routineCategory);
+    // save routine category
+    RoutineCategory routineCategorySaved = routineCategoryRepository.save(routineCategory);
 
-        // RoutineCategory entity to RoutineCategoryResponse
-        return RoutineCategoryResponse.builder()
-            .id(routineCategorySaved.getId())
-            .name(routineCategorySaved.getName())
-            .build();
-    }
+    // RoutineCategory entity to RoutineCategoryResponse
+    return RoutineCategoryResponse.builder()
+        .id(routineCategorySaved.getId())
+        .name(routineCategorySaved.getName())
+        .build();
+  }
 }

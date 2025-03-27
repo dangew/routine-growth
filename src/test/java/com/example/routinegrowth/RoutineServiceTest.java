@@ -7,7 +7,6 @@ import com.example.routinegrowth.DTO.RoutineRequest;
 import com.example.routinegrowth.DTO.RoutineResponse;
 import com.example.routinegrowth.common.BaseServiceTest;
 import com.example.routinegrowth.service.RoutineService;
-
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -24,64 +23,60 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Transactional
 public class RoutineServiceTest extends BaseServiceTest {
 
-    @Autowired
-    private RoutineService routineService;
+  @Autowired private RoutineService routineService;
 
-    @Test
-    @DisplayName("Successful Routine Creation Test")
-    public void createRoutine_success() {
-        // make request object for create routine
-        Long userId = userResponse.getId();
-        RoutineRequest routineRequest =
-            new RoutineRequest(routineCategoryResponseExercise.getId(), "Morning Routine");
+  @Test
+  @DisplayName("Successful Routine Creation Test")
+  public void createRoutine_success() {
+    // make request object for create routine
+    Long userId = userResponse.getId();
+    RoutineRequest routineRequest =
+        new RoutineRequest(routineCategoryResponseExercise.getId(), "Morning Routine");
 
-        try {
-            // create routine
-            RoutineResponse routineResponse = routineService.createRoutine(userId, routineRequest);
+    try {
+      // create routine
+      RoutineResponse routineResponse = routineService.createRoutine(userId, routineRequest);
 
-            // expectation
-            assertThat(routineResponse).isNotNull();
-            assertThat(routineResponse.getContent()).isEqualTo("Morning Routine");
-            assertThat(routineResponse.getCategoryName()).isEqualTo("Exercise");
+      // expectation
+      assertThat(routineResponse).isNotNull();
+      assertThat(routineResponse.getContent()).isEqualTo("Morning Routine");
+      assertThat(routineResponse.getCategoryName()).isEqualTo("Exercise");
 
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
+    } catch (Exception e) {
+      log.error(e.getMessage());
     }
+  }
 
-    @Test
-    @DisplayName("Unfound User Test")
-    public void createRoutine_unfoundUser() {
-        // make request object for creat routine
-        Long userId = userResponse.getId() + 1;
-        RoutineRequest routineRequest =
-            new RoutineRequest(routineCategoryResponseStudy.getId(), "user unfound routine");
+  @Test
+  @DisplayName("Unfound User Test")
+  public void createRoutine_unfoundUser() {
+    // make request object for creat routine
+    Long userId = userResponse.getId() + 1;
+    RoutineRequest routineRequest =
+        new RoutineRequest(routineCategoryResponseStudy.getId(), "user unfound routine");
 
-        // make exception expectation
-        Exception exception = assertThrows(Exception.class,
-            () -> routineService.createRoutine(userId, routineRequest));
+    // make exception expectation
+    Exception exception =
+        assertThrows(Exception.class, () -> routineService.createRoutine(userId, routineRequest));
 
-        // expectation
-        assertThat(exception.getMessage()).isEqualTo("User not found");
-    }
+    // expectation
+    assertThat(exception.getMessage()).isEqualTo("User not found");
+  }
 
-    @Test
-    @DisplayName("Unfound Category Test")
-    // Routine category not found
-    public void createRoutine_unfoundCategory() {
-        // make request object for create routine
-        Long userId = userResponse.getId();
-        RoutineRequest routineRequest =
-            new RoutineRequest(routineCategoryResponseExercise.getId() + 1,
-                "category unfound routine");
+  @Test
+  @DisplayName("Unfound Category Test")
+  // Routine category not found
+  public void createRoutine_unfoundCategory() {
+    // make request object for create routine
+    Long userId = userResponse.getId();
+    RoutineRequest routineRequest =
+        new RoutineRequest(routineCategoryResponseExercise.getId() + 1, "category unfound routine");
 
-        // make exception expectation
-        Exception exception = assertThrows(Exception.class,
-            () -> routineService.createRoutine(userId, routineRequest));
+    // make exception expectation
+    Exception exception =
+        assertThrows(Exception.class, () -> routineService.createRoutine(userId, routineRequest));
 
-        // expectation
-        assertThat(exception.getMessage()).isEqualTo("Routine category not found");
-    }
-
-
+    // expectation
+    assertThat(exception.getMessage()).isEqualTo("Routine category not found");
+  }
 }
