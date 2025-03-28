@@ -5,9 +5,12 @@ import com.example.routinegrowth.DTO.RoutineResponse;
 import com.example.routinegrowth.entity.Routine;
 import com.example.routinegrowth.entity.RoutineCategory;
 import com.example.routinegrowth.entity.User;
+import com.example.routinegrowth.mapper.RoutineMapper;
 import com.example.routinegrowth.repository.RoutineCategoryRepository;
 import com.example.routinegrowth.repository.RoutineRepository;
 import com.example.routinegrowth.repository.UserRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -54,5 +57,19 @@ public class RoutineService {
         .content(routineRequest.getContent())
         .categoryName(routineSaved.getCategory().getName())
         .build();
+  }
+
+  /**
+   * Search routine by user id
+   *
+   * @param userId 루틴을 조회할 사용자 id
+   * @return List<RoutineResponse>
+   */
+  public List<RoutineResponse> searchRoutines(Long userId) {
+    // get all routines by user id
+    List<Routine> routines = routineRepository.findByUserId(userId);
+
+    // convert to List<RoutineReponse> and return
+    return routines.stream().map(RoutineMapper::toDto).collect(Collectors.toList());
   }
 }
