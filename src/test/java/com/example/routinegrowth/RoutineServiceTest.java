@@ -16,6 +16,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 @Slf4j
 @SpringBootTest
 @DisplayName("Routine Service Test")
@@ -78,5 +80,57 @@ public class RoutineServiceTest extends BaseServiceTest {
 
     // expectation
     assertThat(exception.getMessage()).isEqualTo("Routine category not found");
+  }
+
+  // 루틴 조회 테스트 : 성공
+  @Test
+  @DisplayName("Successful Routine Retrieval Test")
+  public void retrieveRoutine_success() {
+    // make RoutineRequest for new routine
+    Long userId = userResponse.getId();
+    RoutineRequest routineRequest =
+      new RoutineRequest(routineCategoryResponseExercise.getId(), "Lunch Routine");
+
+    try {
+      // make routine for test
+      RoutineResponse routineResponse = routineService.createRoutine(userId, routineRequest);
+
+      // retrieve routine
+      assertThat(routineResponse).isNotNull();
+
+    } catch (Exception e) {
+      log.error(e.getMessage());
+    }
+
+    try {
+      // search routine
+      List<RoutineResponse> routineResponses = routineService.searchRoutine(userId);
+
+      // expectation
+      assertThat(routineResponses).isNotNull();
+      assertThat(routineResponses.size()).isEqualTo(1);
+      assertThat(routineResponses.get(0).getContent()).isEqualTo("Lunch Routine");
+    } catch (Exception e) {
+      log.error(e.getMessage());
+    }
+  }
+
+  // 루틴 조회 테스트 : 없는 경우
+  @Test
+  @DisplayName("No Routine Searched Test")
+  public void retrieveRoutine_noRoutine() {
+    // make RoutineRequest for new routine
+    Long userId = userResponse.getId();
+
+    try {
+      // search routine
+      List<RoutineResponse> routineResponses = routineService.searchRoutine(userId);
+
+      // expectation
+      assertThat(routineResponses).isNotNull();
+      assertThat(routineResponses.size()).isEqualTo(0);
+    } catch (Exception e) {
+      log.error(e.getMessage());
+    }
   }
 }
