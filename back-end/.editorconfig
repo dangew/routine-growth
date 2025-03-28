@@ -1,0 +1,29 @@
+# 모든 IDE/에디터(예: IntelliJ, VSCode)에서 코드 스타일을 동일하게 유지시켜주는 설정 파일
+# 팀원들 간에 들쭉날쭉한 들여쓰기, 줄바꿈, 문자셋 문제를 방지 가능
+
+# 최상위 설정
+root = true
+
+# 공통 파일 설정
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Java - google-java-format에 맞춘 스타일
+[*.java]
+indent_style = space
+indent_size = 2
+max_line_length = 100
+# 중괄호 위치 등은 spotless가 강제로 설정하므로 따로 지정하지 않음
+
+# YAML, JSON, XML 등은 2 space 들여쓰기
+[*.{yml,yaml,json,xml}]
+indent_style = space
+indent_size = 2
+
+# Markdown, Gradle
+[*.{md,gradle}]
+indent_style = space
+indent_size = 2
