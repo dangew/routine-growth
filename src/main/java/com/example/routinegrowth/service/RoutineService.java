@@ -65,7 +65,7 @@ public class RoutineService {
    * @param userId 루틴을 조회할 사용자 id
    * @return List<RoutineResponse>
    */
-  public List<RoutineResponse> searchRoutine(Long userId) {
+  public List<RoutineResponse> searchRoutines(Long userId) {
     // get all routines by user id
     List<Routine> routines = routineRepository.findByUserId(userId);
 

@@ -94,7 +94,7 @@ public class RoutineServiceTest extends BaseServiceTest {
     routineService.createRoutine(userId, routineRequest);
 
     // search routine
-    List<RoutineResponse> routineResponses = routineService.searchRoutine(userId);
+    List<RoutineResponse> routineResponses = routineService.searchRoutines(userId);
 
     // expectation
     assertThat(routineResponses).isNotNull();
@@ -110,7 +110,7 @@ public class RoutineServiceTest extends BaseServiceTest {
     Long userId = userResponse.getId();
 
     // search routine
-    List<RoutineResponse> routineResponses = routineService.searchRoutine(userId);
+    List<RoutineResponse> routineResponses = routineService.searchRoutines(userId);
 
     // expectation
     assertThat(routineResponses).isNotNull();
