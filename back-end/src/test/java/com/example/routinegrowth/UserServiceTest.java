@@ -1,5 +1,7 @@
 package com.example.routinegrowth;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import com.example.routinegrowth.DTO.UserRequest;
 import com.example.routinegrowth.DTO.UserResponse;
 import com.example.routinegrowth.service.UserService;
@@ -10,9 +12,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
 
 @SpringBootTest
 @DisplayName("UserService Test")
@@ -35,7 +34,4 @@ public class UserServiceTest {
     assertThat(user_created).isNotNull();
     assertThat(user_created.getEmail()).isEqualTo(userRequest.getEmail());
   }
-
-
-
 }

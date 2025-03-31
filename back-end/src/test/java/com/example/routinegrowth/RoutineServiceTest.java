@@ -7,7 +7,6 @@ import com.example.routinegrowth.DTO.RoutineRequest;
 import com.example.routinegrowth.DTO.RoutineResponse;
 import com.example.routinegrowth.common.BaseServiceTest;
 import com.example.routinegrowth.service.RoutineService;
-
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
