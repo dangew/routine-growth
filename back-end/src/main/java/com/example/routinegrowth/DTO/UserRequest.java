@@ -1,5 +1,6 @@
 package com.example.routinegrowth.DTO;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,5 +13,9 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class UserRequest {
+
+  @NotNull(groups = Create.class)
   private String email;
+
+  public interface Create {}
 }
