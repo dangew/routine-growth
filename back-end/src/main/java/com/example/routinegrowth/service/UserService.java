@@ -35,4 +35,23 @@ public class UserService {
     // User entity to UserResponse
     return UserResponse.builder().id(userSaved.getId()).email(userSaved.getEmail()).build();
   }
+
+  /**
+   * Login user
+   *
+   * @param userRequest request object
+   * @return UserResponse
+   * @throws Exception if user not found
+   */
+  public UserResponse login(UserRequest userRequest) throws Exception {
+
+    // find user by email
+    User user = userRepository.findByEmail(userRequest.getEmail()).orElse(null);
+
+    if (user == null) {
+      throw new Exception("User not found");
+    }
+
+    return UserResponse.builder().id(user.getId()).email(user.getEmail()).build();
+  }
 }
