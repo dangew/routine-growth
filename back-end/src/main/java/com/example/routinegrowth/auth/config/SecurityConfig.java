@@ -1,6 +1,7 @@
 package com.example.routinegrowth.auth.config;
 
 import com.example.routinegrowth.auth.filter.JwtFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +32,14 @@ public class SecurityConfig {
                     .authenticated()
                     .anyRequest()
                     .permitAll());
+    http.exceptionHandling(
+        exception ->
+            exception.authenticationEntryPoint(
+                (request, response, authException) -> {
+                  response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // ✅ 401 직접 명시
+                  response.setContentType("application/json");
+                  response.getWriter().write("{\"message\": \"Unauthorized - token required\"}");
+                }));
     http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }

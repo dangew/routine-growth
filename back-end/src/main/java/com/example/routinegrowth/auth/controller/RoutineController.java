@@ -24,8 +24,10 @@ public class RoutineController {
   private final JwtUtil jwtUtil;
 
   @PostMapping("/create")
-  public ResponseEntity<RoutineResponse> createRoutine (
-      @CookieValue(name = "token") String token, @RequestBody RoutineRequest routineRequest) throws Exception {
+  public ResponseEntity<RoutineResponse> createRoutine(
+      @CookieValue(name = "token", required = false) String token,
+      @RequestBody RoutineRequest routineRequest)
+      throws Exception {
     // check if token is invalid or null
     if (token == null || !jwtUtil.validate(token)) {
       log.error("Invalid token in routine creation");
