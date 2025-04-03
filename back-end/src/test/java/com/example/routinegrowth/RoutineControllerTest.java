@@ -1,8 +1,14 @@
 package com.example.routinegrowth;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.example.routinegrowth.DTO.RoutineRequest;
+import com.example.routinegrowth.auth.jwt.JwtUtil;
 import com.example.routinegrowth.common.BaseServiceTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -13,10 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
 @SpringBootTest
 @DisplayName("Routine Controller Test")
 @TestMethodOrder(MethodOrderer.Random.class)
@@ -24,25 +26,27 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @Transactional
 public class RoutineControllerTest extends BaseServiceTest {
 
-  @Autowired
-  private MockMvc mockMvc;
-  @Autowired
-  private ObjectMapper objectMapper;
+  @Autowired private MockMvc mockMvc;
+  @Autowired private ObjectMapper objectMapper;
+  @Autowired private JwtUtil jwtUtil;
 
   @Test
   @DisplayName("Routine Creation Test")
   public void routineCreation_success() throws Exception {
     // make routine request object
     RoutineRequest routineRequest =
-      RoutineRequest.builder().categoryId(routineCategoryResponseStudy.getId())
-        .content("Study " + "Routine").build();
+        RoutineRequest.builder()
+            .categoryId(routineCategoryResponseStudy.getId())
+            .content("Study Routine")
+            .build();
 
-    mockMvc.perform(
-      post("/api/routines/create")
-        .contentType(APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(routineRequest))
-    )
-      .andExpect(status().isOk());
-
+    mockMvc
+        .perform(
+            post("/api/routines/create")
+              .cookie(new Cookie("token", jwtUtil.generateToken(userResponse.getId(),
+                userResponse.getEmail())))
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(routineRequest)))
+        .andExpect(status().isOk());
   }
 }
