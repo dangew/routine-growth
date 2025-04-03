@@ -17,5 +17,8 @@ public class UserRequest {
   @NotNull(groups = Create.class)
   private String email;
 
+  @NotNull(groups = Create.class)
+  private String password;
+
   public interface Create {}
 }
