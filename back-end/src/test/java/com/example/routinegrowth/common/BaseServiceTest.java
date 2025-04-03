@@ -25,7 +25,7 @@ public abstract class BaseServiceTest {
   @BeforeEach
   public void setUp() {
     // create user
-    UserRequest userRequest = UserRequest.builder().email("User for Test").build();
+    UserRequest userRequest = UserRequest.builder().email("User for Test").password("test").build();
     userResponse = userService.createUser(userRequest);
 
     // create routine category make it two for testing
