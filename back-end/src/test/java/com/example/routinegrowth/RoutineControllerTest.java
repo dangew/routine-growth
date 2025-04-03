@@ -43,10 +43,40 @@ public class RoutineControllerTest extends BaseServiceTest {
     mockMvc
         .perform(
             post("/api/routines/create")
-              .cookie(new Cookie("token", jwtUtil.generateToken(userResponse.getId(),
-                userResponse.getEmail())))
+                .cookie(
+                    new Cookie(
+                        "token",
+                        jwtUtil.generateToken(userResponse.getId(), userResponse.getEmail())))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(routineRequest)))
         .andExpect(status().isOk());
+  }
+
+  @Test
+  @DisplayName("Routine Creation Test - Invalid Token")
+  public void routineCreation_invalidToken() throws Exception {
+    // make routine request object
+    RoutineRequest routineRequest =
+        RoutineRequest.builder()
+            .categoryId(routineCategoryResponseExercise.getId())
+            .content("Exercise Routine")
+            .build();
+
+    // token is null
+    mockMvc
+        .perform(
+            post("/api/routines/create")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(routineRequest)))
+        .andExpect(status().isUnauthorized());
+
+    // token is invalid
+    mockMvc
+        .perform(
+            post("/api/routines/create")
+                .cookie(new Cookie("token", "invalidToken"))
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(routineRequest)))
+        .andExpect(status().isUnauthorized());
   }
 }
