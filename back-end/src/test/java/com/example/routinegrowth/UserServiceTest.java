@@ -34,7 +34,7 @@ public class UserServiceTest {
   @DisplayName("Register User Test : Success")
   public void registerUserTest_success() {
     // make user request object
-    UserRequest userRequest = UserRequest.builder().email("register@test").build();
+    UserRequest userRequest = UserRequest.builder().email("register@test").password("test").build();
 
     // register user
     UserResponse user_created = userService.createUser(userRequest);
@@ -72,7 +72,7 @@ public class UserServiceTest {
   @DisplayName("User Login Test : Success")
   public void loginTest_success() throws Exception {
     // make user request object
-    UserRequest userRequest = UserRequest.builder().email("register@test").build();
+    UserRequest userRequest = UserRequest.builder().email("register@test").password("test").build();
 
     // register user
     userService.createUser(userRequest);
