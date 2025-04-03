@@ -9,6 +9,7 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
   private final UserRepository userRepository;
   private final Validator validator;
+  private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
   public UserResponse createUser(UserRequest userRequest) {
 
@@ -27,7 +29,11 @@ public class UserService {
     }
 
     // userRequest to User entity
-    User userToSave = User.builder().email(userRequest.getEmail()).build();
+    User userToSave =
+        User.builder()
+            .email(userRequest.getEmail())
+            .password(bCryptPasswordEncoder.encode(userRequest.getPassword()))
+            .build();
 
     // save user
     User userSaved = userRepository.save(userToSave);
