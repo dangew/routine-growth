@@ -30,6 +30,6 @@ public class AuthService {
       throw new Exception("Incorrect password");
     }
 
-    return jwtUtil.generateToken(email);
+    return jwtUtil.generateToken(user_found.getId(), email);
   }
 }

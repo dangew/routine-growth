@@ -55,26 +55,24 @@ public class AuthServiceTest {
   public void loginTest_success_controller() throws Exception {
 
     // make user request object
-    UserRequest userRequest = UserRequest.builder().email("login_controller@test").password("test").build();
+    UserRequest userRequest =
+        UserRequest.builder().email("login_controller@test").password("test").build();
     // register user
     userService.createUser(userRequest);
 
     // make auth request object
     AuthRequest authRequest =
-      AuthRequest.builder().email("login_controller@test").password("test").build();
+        AuthRequest.builder().email("login_controller@test").password("test").build();
 
     // make object mapper
     String content = new ObjectMapper().writeValueAsString(authRequest);
 
     // login user
-    mockMvc.perform(
-      post("/api/auth/login")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(content)
-    )
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$.token").exists())
-      .andDo(print())
-      .andReturn();
+    mockMvc
+        .perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON).content(content))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.token").exists())
+        .andDo(print())
+        .andReturn();
   }
 }

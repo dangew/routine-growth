@@ -42,7 +42,7 @@ public class JwtUtil {
    * @param userEmail 사용자 이메일
    * @return JWT 토큰
    */
-  public String generateToken(String userEmail) {
+  public String generateToken(Long userId, String userEmail) {
     // Generate a JWT token using the userEmail
     Key key = getSignedKey();
     long expirationMs = 3600000L; // 1 hour
@@ -50,6 +50,7 @@ public class JwtUtil {
     JwtBuilder builder =
         Jwts.builder()
             .subject(userEmail)
+            .claim("userId", userId)
             .issuedAt(new Date())
             .expiration(new Date(System.currentTimeMillis() + expirationMs))
             .signWith(key);
@@ -80,5 +81,15 @@ public class JwtUtil {
    */
   public String getUserEmail(String token) {
     return getClaimsFromToken(token).get("sub", String.class); // 토큰에서 사용자 이메일 추출
+  }
+
+  /**
+   * JWT 토큰에서 사용자 ID를 가져오는 메서드
+   *
+   * @param token JWT 토큰
+   * @return 사용자 ID
+   */
+  public Long getUserId(String token) {
+    return getClaimsFromToken(token).get("userId", Long.class); // 토큰에서 사용자 ID 추출
   }
 }
