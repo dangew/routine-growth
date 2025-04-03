@@ -82,4 +82,14 @@ public class JwtUtil {
   public String getUserEmail(String token) {
     return getClaimsFromToken(token).get("sub", String.class); // 토큰에서 사용자 이메일 추출
   }
+
+  /**
+   * JWT 토큰에서 사용자 ID를 가져오는 메서드
+   *
+   * @param token JWT 토큰
+   * @return 사용자 ID
+   */
+  public Long getUserId(String token) {
+    return getClaimsFromToken(token).get("userId", Long.class); // 토큰에서 사용자 ID 추출
+  }
 }

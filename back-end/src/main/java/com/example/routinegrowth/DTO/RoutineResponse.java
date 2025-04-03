@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
@@ -14,4 +15,6 @@ import lombok.Setter;
 public class RoutineResponse {
   private String content;
   private String categoryName;
+  private HttpStatus status;
+  private String message;
 }
