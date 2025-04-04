@@ -1,12 +1,16 @@
 package com.example.routinegrowth;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.routinegrowth.DTO.RoutineRequest;
 import com.example.routinegrowth.auth.jwt.JwtUtil;
 import com.example.routinegrowth.common.BaseServiceTest;
+import com.example.routinegrowth.service.RoutineService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
@@ -25,10 +29,16 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 @Transactional
 public class RoutineControllerTest extends BaseServiceTest {
-
+  /**
+   * ✅You need to check BaseSeerviceTest.java before modifying this code.
+   *
+   * @see BaseServiceTest
+   */
   @Autowired private MockMvc mockMvc;
+
   @Autowired private ObjectMapper objectMapper;
   @Autowired private JwtUtil jwtUtil;
+  @Autowired private RoutineService routineService;
 
   @Test
   @DisplayName("Routine Creation Test")
@@ -78,5 +88,53 @@ public class RoutineControllerTest extends BaseServiceTest {
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(routineRequest)))
         .andExpect(status().isUnauthorized());
+  }
+
+  /**
+   * Routine Search Test
+   *
+   * @throws Exception api call exception
+   */
+  @Test
+  @DisplayName("Routine Search Test : Success")
+  public void routineSearch_success() throws Exception {
+
+    // create two routines for testing
+    routineService.createRoutine(
+        userResponse.getId(),
+        RoutineRequest.builder()
+            .categoryId(routineCategoryResponseExercise.getId())
+            .content("Exercise Routine")
+            .build());
+    // 2
+    routineService.createRoutine(
+        userResponse.getId(),
+        RoutineRequest.builder()
+            .categoryId(routineCategoryResponseStudy.getId())
+            .content("Study Routine")
+            .build());
+
+    ///  test GET API , expect size 2
+    mockMvc
+        .perform(get("/api/routines").cookie(userCookie))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].content").value("Exercise Routine"))
+        .andExpect(jsonPath("$.length()").value(2))
+        .andDo(print());
+  }
+
+  /**
+   * Routine Search Test : Invalid Token
+   *
+   * @throws Exception api call exception
+   */
+  @Test
+  @DisplayName("Routine Search Test : Invalid Token")
+  public void routineSearch_invalidToken() throws Exception {
+    // token is null
+    mockMvc.perform(get("/api/routines")).andExpect(status().isUnauthorized()).andDo(print());
+
+    // token is invalid
+    mockMvc.perform(get("/api/routines")).andExpect(status().isUnauthorized());
   }
 }

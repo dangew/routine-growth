@@ -4,8 +4,10 @@ import com.example.routinegrowth.DTO.RoutineCategoryRequest;
 import com.example.routinegrowth.DTO.RoutineCategoryResponse;
 import com.example.routinegrowth.DTO.UserRequest;
 import com.example.routinegrowth.DTO.UserResponse;
+import com.example.routinegrowth.auth.jwt.JwtUtil;
 import com.example.routinegrowth.service.RoutineCategoryService;
 import com.example.routinegrowth.service.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +19,22 @@ public abstract class BaseServiceTest {
 
   @Autowired protected UserService userService;
   @Autowired protected RoutineCategoryService routineCategoryService;
+  @Autowired protected JwtUtil jwtUtil;
 
   protected UserResponse userResponse;
   protected RoutineCategoryResponse routineCategoryResponseStudy;
   protected RoutineCategoryResponse routineCategoryResponseExercise;
+  protected Cookie userCookie;
 
   @BeforeEach
   public void setUp() {
     // create user
     UserRequest userRequest = UserRequest.builder().email("User for Test").password("test").build();
     userResponse = userService.createUser(userRequest);
+
+    // create token and save it in cookie
+    userCookie =
+        new Cookie("token", jwtUtil.generateToken(userResponse.getId(), userResponse.getEmail()));
 
     // create routine category make it two for testing
     String[] categories = {"Study", "Exercise"};
