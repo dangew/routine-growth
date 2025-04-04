@@ -29,17 +29,16 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 @Transactional
 public class RoutineControllerTest extends BaseServiceTest {
-  /**
-   * ✅You need to check BaseSeerviceTest.java before modifying this code.
-   *
-   * @see BaseServiceTest
-   */
   @Autowired private MockMvc mockMvc;
-
   @Autowired private ObjectMapper objectMapper;
   @Autowired private JwtUtil jwtUtil;
   @Autowired private RoutineService routineService;
 
+  /**
+   * Routine Creation Test
+   *
+   * @throws Exception api call exception
+   */
   @Test
   @DisplayName("Routine Creation Test")
   public void routineCreation_success() throws Exception {
@@ -62,6 +61,11 @@ public class RoutineControllerTest extends BaseServiceTest {
         .andExpect(status().isOk());
   }
 
+  /**
+   * Routine Creation Test : Invalid Token
+   *
+   * @throws Exception api call exception
+   */
   @Test
   @DisplayName("Routine Creation Test - Invalid Token")
   public void routineCreation_invalidToken() throws Exception {

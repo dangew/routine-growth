@@ -18,6 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
   private final AuthService authService;
 
+  /**
+   * Handles user login by validating credentials and generating a JWT token.
+   *
+   * @param authRequest the authentication request containing email and password
+   * @param response the HTTP response to set the token cookie
+   * @return a ResponseEntity containing the authentication response or an error message
+   */
   @PostMapping("/login")
   public ResponseEntity<?> login(
       @RequestBody AuthRequest authRequest, HttpServletResponse response) {

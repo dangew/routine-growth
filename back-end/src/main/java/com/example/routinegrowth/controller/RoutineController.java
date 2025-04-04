@@ -25,6 +25,13 @@ public class RoutineController {
   private final RoutineService routineService;
   private final JwtUtil jwtUtil;
 
+  /**
+   * Creates a new routine for the logged-in user.
+   * @param token JWT token for authentication and verification of user identity
+   * @param routineRequest Request object containing routine details
+   * @return ResponseEntity containing the created routine details or an error message
+   * @throws Exception If the routine creation fails
+   */
   @PostMapping("/create")
   public ResponseEntity<RoutineResponse> createRoutine(
       @CookieValue(name = "token", required = false) String token,
@@ -49,6 +56,11 @@ public class RoutineController {
     return ResponseEntity.ok(routineResponse);
   }
 
+  /**
+   * Find routines by user id.
+   * @param token JWT token for authentication and verification of user identity
+   * @return ResponseEntity containing a list of routines or an error message
+   */
   @GetMapping
   public ResponseEntity<List<RoutineResponse>> getRoutine(
       @CookieValue(name = "token", required = false) String token) {
