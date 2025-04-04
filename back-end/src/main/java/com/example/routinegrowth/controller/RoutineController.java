@@ -1,4 +1,4 @@
-package com.example.routinegrowth.auth.controller;
+package com.example.routinegrowth.controller;
 
 import com.example.routinegrowth.DTO.RoutineRequest;
 import com.example.routinegrowth.DTO.RoutineResponse;
