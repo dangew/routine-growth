@@ -51,7 +51,7 @@ public class RoutineController {
 
   @GetMapping
   public ResponseEntity<List<RoutineResponse>> getRoutine(
-      @CookieValue(name = "token", required = false) String token) throws Exception {
+      @CookieValue(name = "token", required = false) String token) {
     // check if token is invalid or null
     if (token == null || !jwtUtil.validate(token)) {
       log.error("Invalid token in routine search");
