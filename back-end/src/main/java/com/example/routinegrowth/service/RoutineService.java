@@ -2,6 +2,7 @@ package com.example.routinegrowth.service;
 
 import com.example.routinegrowth.DTO.RoutineRequest;
 import com.example.routinegrowth.DTO.RoutineResponse;
+import com.example.routinegrowth.auth.jwt.JwtUtil;
 import com.example.routinegrowth.entity.Routine;
 import com.example.routinegrowth.entity.RoutineCategory;
 import com.example.routinegrowth.entity.User;
@@ -23,6 +24,7 @@ public class RoutineService {
   private final RoutineRepository routineRepository;
   private final UserRepository userRepository;
   private final RoutineCategoryRepository routineCategoryRepository;
+  private final JwtUtil jwtUtil;
 
   public RoutineResponse createRoutine(Long userId, RoutineRequest routineRequest)
       throws Exception {
@@ -71,5 +73,19 @@ public class RoutineService {
 
     // convert to List<RoutineReponse> and return
     return routines.stream().map(RoutineMapper::toDto).collect(Collectors.toList());
+  }
+
+  /**
+   * Get all routines by user id from token
+   *
+   * @param token JWT token
+   * @return List<RoutineResponse>
+   */
+  public List<RoutineResponse> getRoutines(String token) {
+
+    // get routine by user id from token
+    return routineRepository.findByUserId(jwtUtil.getUserId(token)).stream()
+        .map(RoutineMapper::toDto)
+        .toList();
   }
 }
