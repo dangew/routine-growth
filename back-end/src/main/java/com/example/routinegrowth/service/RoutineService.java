@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -58,6 +59,8 @@ public class RoutineService {
     return RoutineResponse.builder()
         .content(routineRequest.getContent())
         .categoryName(routineSaved.getCategory().getName())
+        .status(HttpStatus.OK)
+        .message("Routine created successfully")
         .build();
   }
 

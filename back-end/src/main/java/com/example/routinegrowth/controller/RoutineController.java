@@ -4,6 +4,13 @@ import com.example.routinegrowth.DTO.RoutineRequest;
 import com.example.routinegrowth.DTO.RoutineResponse;
 import com.example.routinegrowth.auth.jwt.JwtUtil;
 import com.example.routinegrowth.service.RoutineService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +34,43 @@ public class RoutineController {
 
   /**
    * Creates a new routine for the logged-in user.
+   *
    * @param token JWT token for authentication and verification of user identity
    * @param routineRequest Request object containing routine details
    * @return ResponseEntity containing the created routine details or an error message
    * @throws Exception If the routine creation fails
    */
+  @Operation(
+      summary = "Create Routine",
+      description = "Create a new routine for the logged-in user. Requires a valid JWT token.")
+  @ApiResponses({
+    @ApiResponse(
+        responseCode = "200",
+        description = "Routine created successfully",
+        content =
+            @Content(
+                mediaType = "application/json",
+                examples =
+                    @ExampleObject(
+                        name = "routineCreation_success",
+                        summary = "Routine creation success",
+                        value =
+                            "{\"content\": \"Routine 1\", \"categoryName\": \"Category 1\", \"status\": \"200\", \"message\": \"Routine created successfully\"}"),
+                schema = @Schema(implementation = RoutineResponse.class))),
+    @ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized",
+        content =
+            @Content(
+                mediaType = "application/json",
+                examples =
+                    @ExampleObject(
+                        name = "unauthorizedError",
+                        summary = "Authentication error",
+                        value =
+                            "{\"status\": \"UNAUTHORIZED\", \"message\": \"Invalid or missing token\"}"),
+                schema = @Schema(implementation = RoutineResponse.class))),
+  })
   @PostMapping("/create")
   public ResponseEntity<RoutineResponse> createRoutine(
       @CookieValue(name = "token", required = false) String token,
@@ -58,9 +97,41 @@ public class RoutineController {
 
   /**
    * Find routines by user id.
+   *
    * @param token JWT token for authentication and verification of user identity
    * @return ResponseEntity containing a list of routines or an error message
    */
+  @Operation(
+      summary = "Get Routines by User",
+      description = "Get all routines for the logged-in user. Requires a valid JWT token.")
+  @ApiResponses({
+    @ApiResponse(
+        responseCode = "200",
+        description = "Routines retrieved successfully",
+        content =
+            @Content(
+                mediaType = "application/json",
+                examples =
+                    @ExampleObject(
+                        name = "routineList",
+                        summary = "List of routines",
+                        value =
+                            "[{\"content\": \"Routine 1\", \"categoryName\": \"Category 1\"}, {\"content\": \"Routine 2\", \"categoryName\": \"Category 2\"}]"),
+                array = @ArraySchema(schema = @Schema(implementation = RoutineResponse.class)))),
+    @ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized",
+        content =
+            @Content(
+                mediaType = "application/json",
+                examples =
+                    @ExampleObject(
+                        name = "unauthorizedError",
+                        summary = "Invalid token",
+                        value =
+                            "[{\"status\": \"UNAUTHORIZED\", \"message\": \"Invalid or missing token\"}]"),
+                array = @ArraySchema(schema = @Schema(implementation = RoutineResponse.class))))
+  })
   @GetMapping
   public ResponseEntity<List<RoutineResponse>> getRoutine(
       @CookieValue(name = "token", required = false) String token) {
