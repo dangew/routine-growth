@@ -14,9 +14,6 @@ public class AuthResponse {
   @Schema(description = "토큰", example = "123absesefsdfzefaw239hsdf")
   private String token;
 
-  @Schema(description = "토큰 만료 시간", example = "2023-10-10T10:00:00")
-  private String error;
-
   @Schema(description = "에러 메시지", example = "인증에 실패했습니다.")
   private String message;
 
