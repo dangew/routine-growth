@@ -1,5 +1,6 @@
 package com.example.routinegrowth.auth.controller;
 
+import com.example.routinegrowth.DTO.ErrorResponse;
 import com.example.routinegrowth.auth.dto.AuthRequest;
 import com.example.routinegrowth.auth.dto.AuthResponse;
 import com.example.routinegrowth.auth.service.AuthService;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,14 +55,14 @@ public class AuthController {
         content =
             @Content(
                 mediaType = "application/json",
-                schema = @Schema(implementation = AuthResponse.class),
+                schema = @Schema(implementation = ErrorResponse.class),
                 examples =
                     @ExampleObject(
                         name = "login_fail",
                         summary = "Login failure",
                         value =
                             "{\"message\": \"Invalid email"
-                                + " or password\", \"email\": \"test@test.com\"}")))
+                                + " or password\", \"status\": \"401\"}")))
   })
   @PostMapping("/login")
   public ResponseEntity<?> login(
@@ -76,7 +78,7 @@ public class AuthController {
     } catch (Exception e) {
       return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED)
           .body(
-              AuthResponse.builder().message(e.getMessage()).email(authRequest.getEmail()).build());
+              ErrorResponse.builder().status(HttpStatus.UNAUTHORIZED).message(e.getMessage()).build());
     }
   }
 }
