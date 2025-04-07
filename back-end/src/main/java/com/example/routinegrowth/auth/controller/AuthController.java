@@ -60,7 +60,7 @@ public class AuthController {
                         summary = "Login failure",
                         value =
                             "{\"message\": \"Invalid email"
-                                + " or passwaord\", \"email\": \"test@test.com\"}")))
+                                + " or password\", \"email\": \"test@test.com\"}")))
   })
   @PostMapping("/login")
   public ResponseEntity<?> login(
