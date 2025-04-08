@@ -78,7 +78,10 @@ public class AuthController {
     } catch (Exception e) {
       return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED)
           .body(
-              ErrorResponse.builder().status(HttpStatus.UNAUTHORIZED).message(e.getMessage()).build());
+              ErrorResponse.builder()
+                  .status(HttpStatus.UNAUTHORIZED)
+                  .message(e.getMessage())
+                  .build());
     }
   }
 }
