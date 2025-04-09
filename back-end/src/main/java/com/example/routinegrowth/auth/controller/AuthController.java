@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,7 +76,31 @@ public class AuthController {
       cookie.setHttpOnly(true);
       response.addCookie(cookie);
 
-      return ResponseEntity.ok(AuthResponse.builder().token(token).build());
+      return ResponseEntity.ok(
+          AuthResponse.builder().token(token).email(authRequest.getEmail()).build());
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED)
+          .body(
+              ErrorResponse.builder()
+                  .status(HttpStatus.UNAUTHORIZED)
+                  .message(e.getMessage())
+                  .build());
+    }
+  }
+
+  /**
+   * 토큰에서 로그인된 사용자 정보를 가져오는 메서드
+   *
+   * @param token JWT 토큰
+   * @return ResponseEntity
+   */
+  @GetMapping
+  public ResponseEntity<?> getLoggedInUser(@CookieValue(name = "token") String token) {
+    try {
+      String loggedInUserEmail = authService.getUserEmail(token);
+      return ResponseEntity.ok(
+          AuthResponse.builder().email(loggedInUserEmail).message("User logged in").build());
+
     } catch (Exception e) {
       return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED)
           .body(

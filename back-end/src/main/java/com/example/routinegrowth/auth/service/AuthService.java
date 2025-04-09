@@ -32,4 +32,14 @@ public class AuthService {
 
     return jwtUtil.generateToken(user_found.getId(), email);
   }
+
+  /**
+   * JWT 토큰을 통해 사용자의 이메일을 가져오는 메서드
+   *
+   * @param token JWT 토큰
+   * @return 로그인된 사용자의 이메일
+   */
+  public String getUserEmail(String token) {
+    return jwtUtil.getUserEmail(token);
+  }
 }
