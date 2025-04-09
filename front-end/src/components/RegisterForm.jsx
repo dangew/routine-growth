@@ -42,7 +42,7 @@ function RegisterForm() {
     }
 
     setErrors(newErrors);
-    return newErrors;
+    return errors;
   };
 
   const handleSubmit = (e) => {

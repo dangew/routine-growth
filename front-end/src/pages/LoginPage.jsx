@@ -1,19 +1,30 @@
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
-function LoginPage({ onLogin }) {
+function LoginPage({ setUser }) {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
     if (!email) return alert("이메일을 입력하세요!");
     try {
-      const response = await axios.post("http://localhost:8080/api/users", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/api/auth/login",
+        { email, password },
+        { withCredentials: true }
+      );
+      console.log("response : ", JSON.stringify(response));
+
       const user = response.data;
-      onLogin(user); // App에 유저 정보 전달
+      localStorage.setItem("user", JSON.stringify(user));
+
+      console.log("user : ", user);
+      setUser(user);
+      alert("로그인 성공");
+
+      navigate("/mypage");
     } catch (err) {
       alert("로그인 실패");
       console.error(err);
