@@ -7,23 +7,38 @@ import MyPage from "./pages/MyPage";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import RegisterForm from "./components/RegisterForm.jsx";
 import Header from "./components/Header.jsx";
+import api from "./api/axios";
 
 function AppRouter({ user, setUser }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(user ? true : false);
 
-  const handleLogin = () => setIsLoggedIn(true);
-  const handleLogout = () => setIsLoggedIn(false);
+  const handleLogout = async () => {
+    async function logout() {
+      try {
+        const response = await api.get("/api/auth/logout");
+        console.log("logotu response : ", response);
+        alert("로그아웃 성공");
+      } catch (err) {
+        console.error(err);
+        alert("로그아웃 실패");
+      }
+    }
+    await logout();
+    setIsLoggedIn(false);
+    location.replace("/");
+  };
 
   return (
     <BrowserRouter>
-      <Header
-        isLoggedIn={isLoggedIn}
-        onLogin={handleLogin}
-        onLogout={handleLogout}
-      />
+      <Header isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       <Routes>
         <Route path="/register" element={<RegisterForm />} />
-        <Route path="/login" element={<LoginPage setUser={setUser} />} />
+        <Route
+          path="/login"
+          element={
+            <LoginPage setUser={setUser} setIsLoggedIn={setIsLoggedIn} />
+          }
+        />
         <Route
           path="/"
           element={

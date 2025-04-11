@@ -1,4 +1,4 @@
-const Header = ({ isLoggedIn, onLogin, onLogout }) => {
+const Header = ({ isLoggedIn, onLogout }) => {
   return (
     <header style={styles.header}>
       <h1 style={styles.title}>My App</h1>
@@ -7,10 +7,9 @@ const Header = ({ isLoggedIn, onLogin, onLogout }) => {
           Logout
         </button>
       ) : (
-        <button style={styles.button} onClick={onLogin}>
-          Login
-        </button>
+        <a href="/login">Login</a>
       )}
+      <a href="/register">Register</a>
     </header>
   );
 };

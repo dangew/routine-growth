@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
-function LoginPage({ setUser }) {
+function LoginPage({ setUser, setIsLoggedIn }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +22,7 @@ function LoginPage({ setUser }) {
 
       console.log("user : ", user);
       setUser(user);
+      setIsLoggedIn(true);
       alert("로그인 성공");
 
       navigate("/mypage");

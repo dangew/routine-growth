@@ -13,7 +13,7 @@ function App() {
         const response = await api.get("/api/auth");
         setUser(response.data);
       } catch (err) {
-        console.log("자동 로그인 실패:", err);
+        console.log("유저 정보 확인 에러", err);
       } finally {
         setLoading(false);
       }
