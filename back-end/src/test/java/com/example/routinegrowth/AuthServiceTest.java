@@ -12,6 +12,7 @@ import com.example.routinegrowth.auth.jwt.JwtUtil;
 import com.example.routinegrowth.auth.service.AuthService;
 import com.example.routinegrowth.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -43,11 +44,14 @@ public class AuthServiceTest {
     userService.createUser(userRequest);
 
     // login user
-    String login_token = authService.login(userRequest.getEmail(), userRequest.getPassword());
+    Map<String, String> tokens =
+        authService.login(userRequest.getEmail(), userRequest.getPassword());
 
     // expectation
-    assertThat(jwtUtil.validate(login_token)).isTrue();
-    assertThat(jwtUtil.getUserEmail(login_token)).isEqualTo(userRequest.getEmail());
+    String token = tokens.get("accessToken");
+    assertThat(tokens.size()).isEqualTo(2);
+    assertThat(jwtUtil.validate(token)).isTrue();
+    assertThat(jwtUtil.getUserEmail(token)).isEqualTo(userRequest.getEmail());
   }
 
   @Test

@@ -9,6 +9,7 @@ import com.example.routinegrowth.service.RoutineCategoryService;
 import com.example.routinegrowth.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +26,7 @@ public abstract class BaseServiceTest {
   protected RoutineCategoryResponse routineCategoryResponseStudy;
   protected RoutineCategoryResponse routineCategoryResponseExercise;
   protected Cookie userCookie;
+  protected Cookie userRefreshToken;
 
   @BeforeEach
   public void setUp() {
@@ -34,7 +36,18 @@ public abstract class BaseServiceTest {
 
     // create token and save it in cookie
     userCookie =
-        new Cookie("token", jwtUtil.generateToken(userResponse.getId(), userResponse.getEmail()));
+        new Cookie(
+            "accessToken",
+            jwtUtil.generateToken(userResponse.getId(), userResponse.getEmail(), "access"));
+    userCookie.setHttpOnly(true);
+    userCookie.setPath("/");
+    userCookie.setMaxAge(60 * 60); // 1 hour
+
+    // create refresh token
+    userRefreshToken = new Cookie("refreshToken", UUID.randomUUID().toString());
+    userRefreshToken.setHttpOnly(true);
+    userRefreshToken.setPath("/");
+    userRefreshToken.setMaxAge(60 * 60 * 24 * 30); // 30 days
 
     // create routine category make it two for testing
     String[] categories = {"Study", "Exercise"};

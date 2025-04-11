@@ -31,7 +31,7 @@ public class JwtUtilTest {
   public void generateTokenTeset() {
     Long userId = 1L;
     String userEmail = "JWT@TEST";
-    String token = jwtUtil.generateToken(userId, userEmail);
+    String token = jwtUtil.generateToken(userId, userEmail, "access");
 
     assertThat(jwtUtil.validate(token)).isTrue();
     assertThat(jwtUtil.getUserEmail(token)).isEqualTo(userEmail);
