@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,14 +71,27 @@ public class AuthController {
   public ResponseEntity<?> login(
       @RequestBody AuthRequest authRequest, HttpServletResponse response) {
     try {
-      String token = authService.login(authRequest.getEmail(), authRequest.getPassword());
-      Cookie cookie = new Cookie("token", token);
-      cookie.setPath("/");
-      cookie.setHttpOnly(true);
-      response.addCookie(cookie);
+      Map<String, String> result =
+          authService.login(authRequest.getEmail(), authRequest.getPassword());
+
+      String accessToken = result.get("accessToken");
+      Cookie accessCookie = new Cookie("accessToken", accessToken);
+      accessCookie.setPath("/");
+      accessCookie.setHttpOnly(true);
+      accessCookie.setMaxAge(60 * 15); // 15분
+      response.addCookie(accessCookie);
+
+      String refreshToken = result.get("refreshToken");
+      Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+      refreshCookie.setPath("/");
+      refreshCookie.setHttpOnly(true);
+      refreshCookie.setMaxAge(60 * 60 * 24 * 7); // 일주일
+      response.addCookie(refreshCookie);
+
+      // refresh token
 
       return ResponseEntity.ok(
-          AuthResponse.builder().token(token).email(authRequest.getEmail()).build());
+          AuthResponse.builder().token(accessToken).email(authRequest.getEmail()).build());
     } catch (Exception e) {
       return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED)
           .body(
@@ -95,12 +109,39 @@ public class AuthController {
    * @return ResponseEntity
    */
   @GetMapping
-  public ResponseEntity<?> getLoggedInUser(@CookieValue(name = "token") String token) {
+  public ResponseEntity<?> getLoggedInUser(@CookieValue(name = "accessToken") String token) {
     try {
       String loggedInUserEmail = authService.getUserEmail(token);
       return ResponseEntity.ok(
           AuthResponse.builder().email(loggedInUserEmail).message("User logged in").build());
 
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED)
+          .body(
+              ErrorResponse.builder()
+                  .status(HttpStatus.UNAUTHORIZED)
+                  .message(e.getMessage())
+                  .build());
+    }
+  }
+
+  @GetMapping("/logout")
+  public ResponseEntity<?> logout(
+      HttpServletResponse response, @CookieValue(name = "refreshToken") String token) {
+    try {
+      authService.logout(token);
+
+      Cookie accessCookie = new Cookie("accessToken", null);
+      accessCookie.setPath("/");
+      accessCookie.setMaxAge(0); // 쿠키 만료 시키기
+      response.addCookie(accessCookie);
+
+      Cookie refreshCookie = new Cookie("refreshToken", null);
+      refreshCookie.setPath("/");
+      refreshCookie.setMaxAge(0); // 쿠키 말료 시키기
+      response.addCookie(refreshCookie);
+
+      return ResponseEntity.ok("Logout successful");
     } catch (Exception e) {
       return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED)
           .body(
