@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.routinegrowth.DTO.RoutineRequest;
-import com.example.routinegrowth.auth.jwt.JwtUtil;
 import com.example.routinegrowth.common.BaseServiceTest;
 import com.example.routinegrowth.service.RoutineService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class RoutineControllerTest extends BaseServiceTest {
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
-  @Autowired private JwtUtil jwtUtil;
   @Autowired private RoutineService routineService;
 
   /**
@@ -52,10 +50,7 @@ public class RoutineControllerTest extends BaseServiceTest {
     mockMvc
         .perform(
             post("/api/routines/create")
-                .cookie(
-                    new Cookie(
-                        "token",
-                        jwtUtil.generateToken(userResponse.getId(), userResponse.getEmail())))
+                .cookie(userCookie, userRefreshToken)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(routineRequest)))
         .andExpect(status().isOk());
@@ -120,7 +115,7 @@ public class RoutineControllerTest extends BaseServiceTest {
 
     ///  test GET API , expect size 2
     mockMvc
-        .perform(get("/api/routines").cookie(userCookie))
+        .perform(get("/api/routines").cookie(userCookie, userRefreshToken))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].content").value("Exercise Routine"))
         .andExpect(jsonPath("$.length()").value(2))

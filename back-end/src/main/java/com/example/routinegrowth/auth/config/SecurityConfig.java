@@ -36,7 +36,7 @@ public class SecurityConfig {
         exception ->
             exception.authenticationEntryPoint(
                 (request, response, authException) -> {
-                  response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // ✅ 401 직접 명시
+                  response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 직접 명시
                   response.setContentType("application/json");
                   response.getWriter().write("{\"message\": \"Unauthorized - token required\"}");
                 }));

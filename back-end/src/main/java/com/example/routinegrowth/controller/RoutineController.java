@@ -73,7 +73,7 @@ public class RoutineController {
   })
   @PostMapping("/create")
   public ResponseEntity<RoutineResponse> createRoutine(
-      @CookieValue(name = "token", required = false) String token,
+      @CookieValue(name = "accessToken", required = false) String token,
       @RequestBody RoutineRequest routineRequest)
       throws Exception {
     // check if token is invalid or null
@@ -134,7 +134,7 @@ public class RoutineController {
   })
   @GetMapping
   public ResponseEntity<List<RoutineResponse>> getRoutine(
-      @CookieValue(name = "token", required = false) String token) {
+      @CookieValue(name = "accessToken", required = false) String token) {
     // check if token is invalid or null
     if (token == null || !jwtUtil.validate(token)) {
       log.error("Invalid token in routine search");
